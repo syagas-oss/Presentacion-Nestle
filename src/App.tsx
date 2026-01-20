@@ -22,23 +22,29 @@ const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Al usar base: './' en vite.config, los recursos en 'public' se sirven
-    // relativos al index.html.
-    // public/content/content.json -> ./content/content.json
-    const contentPath = './content/content.json';
+    // Construcción robusta de la ruta para GitHub Pages y Localhost.
+    // import.meta.env.BASE_URL contiene el path configurado en vite.config.ts (./ o /repo/)
+    // Aseguramos que termine con '/' antes de concatenar el archivo.
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+      ? import.meta.env.BASE_URL 
+      : `${import.meta.env.BASE_URL}/`;
+      
+    // Vite sirve los archivos de 'public' en la raíz del build.
+    // Por lo tanto, public/content/content.json es accesible en {baseUrl}content/content.json
+    const contentPath = `${baseUrl}content/content.json`;
 
-    console.log("Cargando contenido desde:", contentPath);
+    console.log("Sistema BioLife - Conectando a:", contentPath);
 
     fetch(contentPath)
       .then(res => {
         if (!res.ok) {
-          throw new Error(`Error HTTP ${res.status}: Verifica que el archivo exista en public/content/content.json`);
+          throw new Error(`Error de conexión (${res.status}). Verifique la ruta: ${contentPath}`);
         }
         return res.json();
       })
       .then(setData)
       .catch(err => {
-        console.error("Error crítico cargando datos:", err);
+        console.error("Error crítico de sistema:", err);
         setError(err.message);
       });
   }, []);
@@ -113,7 +119,7 @@ const App: React.FC = () => {
   if (error) return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-red-500 p-8 text-center font-sans">
       <div className="text-4xl font-black uppercase tracking-tighter mb-4">SYSTEM ERROR</div>
-      <p className="font-mono text-sm opacity-70 mb-2">Fallo en la conexión de datos.</p>
+      <p className="font-mono text-sm opacity-70 mb-2">No se pudo cargar la base de datos.</p>
       <p className="font-mono text-xs opacity-50 bg-white/10 p-4 rounded max-w-lg mx-auto">{error}</p>
     </div>
   );
