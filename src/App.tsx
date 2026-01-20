@@ -22,24 +22,23 @@ const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Detectar ruta base (para GitHub Pages o local)
-    // El cast (import.meta as any) evita errores de TS si el tipo no está configurado
-    const baseUrl = (import.meta as any).env?.BASE_URL || '/';
-    const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-    
-    // La ruta correcta es public/content/content.json, que en el navegador es /content/content.json
-    const contentPath = `${cleanBase}content/content.json`;
+    // Al usar base: './' en vite.config, los recursos en 'public' se sirven
+    // relativos al index.html.
+    // public/content/content.json -> ./content/content.json
+    const contentPath = './content/content.json';
 
-    console.log("Intentando cargar:", contentPath);
+    console.log("Cargando contenido desde:", contentPath);
 
     fetch(contentPath)
       .then(res => {
-        if (!res.ok) throw new Error(`Error ${res.status}: No se pudo cargar ${contentPath}`);
+        if (!res.ok) {
+          throw new Error(`Error HTTP ${res.status}: Verifica que el archivo exista en public/content/content.json`);
+        }
         return res.json();
       })
       .then(setData)
       .catch(err => {
-        console.error("Fallo crítico:", err);
+        console.error("Error crítico cargando datos:", err);
         setError(err.message);
       });
   }, []);
@@ -97,7 +96,7 @@ const App: React.FC = () => {
 
   // Loading State
   if (!data && !error) return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500">
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500 font-sans">
       <div className="text-4xl font-black animate-pulse uppercase tracking-tighter italic mb-4">BIO_LIFE_SYSTEM_INIT...</div>
       <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
         <motion.div 
@@ -114,8 +113,8 @@ const App: React.FC = () => {
   if (error) return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-red-500 p-8 text-center font-sans">
       <div className="text-4xl font-black uppercase tracking-tighter mb-4">SYSTEM ERROR</div>
-      <p className="font-mono text-sm opacity-70 mb-2">No se pudo conectar con el sistema de datos.</p>
-      <p className="font-mono text-xs opacity-50 bg-white/10 p-2 rounded">{error}</p>
+      <p className="font-mono text-sm opacity-70 mb-2">Fallo en la conexión de datos.</p>
+      <p className="font-mono text-xs opacity-50 bg-white/10 p-4 rounded max-w-lg mx-auto">{error}</p>
     </div>
   );
 
