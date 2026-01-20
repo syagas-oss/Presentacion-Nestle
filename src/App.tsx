@@ -10,6 +10,7 @@ import { ContentData } from './types';
 
 const App: React.FC = () => {
   const [data, setData] = useState<ContentData | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [currentBuildIndex, setCurrentBuildIndex] = useState(-1);
   const [direction, setDirection] = useState(0);
@@ -21,26 +22,39 @@ const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('./content.json')
-      .then(res => res.json())
+    // Detectar ruta base (para GitHub Pages o local)
+    // El cast (import.meta as any) evita errores de TS si el tipo no está configurado
+    const baseUrl = (import.meta as any).env?.BASE_URL || '/';
+    const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    
+    // La ruta correcta es public/content/content.json, que en el navegador es /content/content.json
+    const contentPath = `${cleanBase}content/content.json`;
+
+    console.log("Intentando cargar:", contentPath);
+
+    fetch(contentPath)
+      .then(res => {
+        if (!res.ok) throw new Error(`Error ${res.status}: No se pudo cargar ${contentPath}`);
+        return res.json();
+      })
       .then(setData)
-      .catch(err => console.error("Error loading content:", err));
+      .catch(err => {
+        console.error("Fallo crítico:", err);
+        setError(err.message);
+      });
   }, []);
 
   const navigateForward = useCallback(() => {
     if (!data) return;
     const currentSlide = data.slides[currentSlideIndex];
-    // Check if the current slide has build steps
     const maxBuilds = currentSlide.builds ? currentSlide.builds.length - 1 : -1;
 
     if (currentBuildIndex < maxBuilds) {
-      // Advance build
       setCurrentBuildIndex(prev => prev + 1);
     } else if (currentSlideIndex < data.slides.length - 1) {
-      // Advance slide
       setDirection(1);
       setCurrentSlideIndex(prev => prev + 1);
-      setCurrentBuildIndex(-1); // Reset build index
+      setCurrentBuildIndex(-1);
     }
   }, [data, currentSlideIndex, currentBuildIndex]);
 
@@ -48,15 +62,12 @@ const App: React.FC = () => {
     if (!data) return;
     
     if (currentBuildIndex > -1) {
-      // Go back one build
       setCurrentBuildIndex(prev => prev - 1);
     } else if (currentSlideIndex > 0) {
-      // Go back one slide
       setDirection(-1);
       const prevSlideIndex = currentSlideIndex - 1;
       const prevSlide = data.slides[prevSlideIndex];
       setCurrentSlideIndex(prevSlideIndex);
-      // Set build index to the last build of the previous slide (or -1 if none)
       setCurrentBuildIndex(prevSlide.builds ? prevSlide.builds.length - 1 : -1);
     }
   }, [data, currentSlideIndex, currentBuildIndex]);
@@ -84,7 +95,29 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKey);
   }, [navigateForward, navigateBackward, showOverview, toggleFullscreen]);
 
-  if (!data) return <div className="h-screen w-screen flex items-center justify-center text-blue-500 font-black text-4xl animate-pulse uppercase tracking-tighter italic">BIO_LIFE_SYSTEM_INIT...</div>;
+  // Loading State
+  if (!data && !error) return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500">
+      <div className="text-4xl font-black animate-pulse uppercase tracking-tighter italic mb-4">BIO_LIFE_SYSTEM_INIT...</div>
+      <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
+        <motion.div 
+          className="h-full bg-blue-500"
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      </div>
+    </div>
+  );
+
+  // Error State
+  if (error) return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-red-500 p-8 text-center font-sans">
+      <div className="text-4xl font-black uppercase tracking-tighter mb-4">SYSTEM ERROR</div>
+      <p className="font-mono text-sm opacity-70 mb-2">No se pudo conectar con el sistema de datos.</p>
+      <p className="font-mono text-xs opacity-50 bg-white/10 p-2 rounded">{error}</p>
+    </div>
+  );
 
   const currentSlide = data.slides[currentSlideIndex];
 
@@ -97,9 +130,6 @@ const App: React.FC = () => {
       aria-label={`Slide ${currentSlideIndex + 1} of ${data.slides.length}: ${currentSlide.title}`}
     >
       <style>{`
-        * { cursor: none; }
-        button, a, [role="button"] { cursor: none; }
-        ::selection { background: #3B82F6; color: white; }
         .grid-bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
       `}</style>
 
@@ -158,6 +188,7 @@ const App: React.FC = () => {
       {/* Custom Cursor Placeholder */}
       <motion.div 
         className="fixed w-4 h-4 bg-blue-500 rounded-full pointer-events-none z-[999] mix-blend-difference"
+        style={{ top: 0, left: 0 }} 
         animate={{ scale: [1, 1.5, 1] }}
         transition={{ duration: 2, repeat: Infinity }}
       />

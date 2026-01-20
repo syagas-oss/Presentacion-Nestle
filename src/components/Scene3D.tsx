@@ -54,7 +54,8 @@ export const Scene3D: React.FC<{ slideIndex: number; slideCount: number }> = ({ 
   }, [count]);
 
   useFrame((state) => {
-    if (!activeRef.current) return;
+    // Safety check: ensure component is visible and ref is initialized
+    if (!activeRef.current || !points.current || !points.current.geometry) return;
 
     const time = state.clock.getElapsedTime();
     const pos = points.current.geometry.attributes.position.array as Float32Array;
