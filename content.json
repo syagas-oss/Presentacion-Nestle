@@ -1,0 +1,19 @@
+
+{
+  "slides": [
+    { "id": 1, "type": "HERO", "title": "Nestlé Nutrición", "subtitle": "Quiénes somos", "description": "Unidad líder en salud y nutrición con base científica.", "highlight": "Ciencia aplicada + Capacidad de escala global" },
+    { "id": 2, "type": "DATA", "title": "Escala Real", "subtitle": "Nestlé", "stats": [{ "v": "185", "l": "Países" }, { "v": "CHF 91B", "l": "Ventas" }, { "v": "277k", "l": "Talento" }] },
+    { "id": 3, "type": "TIMELINE", "title": "Nuestra Historia", "subtitle": "Evolución", "items": ["1866: Inicios", "1980: Expansión global", "2011: NHS Fundada"] },
+    { "id": 4, "type": "LIST", "title": "Nestlé Health Science", "subtitle": "Health & Nutrition continuum", "items": ["Enfoque en salud", "Ciencia aplicada + productos + servicios", "Capacidad de escala global"] },
+    { "id": 5, "type": "DATA_FOCUS", "title": "NHS en Cifras", "subtitle": "Impacto Actual NHS", "stats": [{ "v": "150", "l": "Países", "icon": "Globe" }, { "v": "$7.6B", "l": "Ventas USD", "icon": "TrendingUp" }, { "v": "11k+", "l": "Talento", "icon": "Users" }] },
+    { "id": 6, "type": "ALERT", "title": "Salud Digital = Caos", "subtitle": "Señales Críticas", "cards": [{ "t": "68% Búsquedas", "d": "Usuarios buscan salud online sin guía clínica." }, { "t": "Info-xicación", "d": "Exceso de ruido y desconfianza en fake news." }, { "t": "Privacidad", "d": "72% teme el uso indebido de sus datos médicos." }] },
+    { "id": 8, "type": "TABLE_3COL", "title": "El mercado está lleno…", "subtitle": "Competencia", "description": "70% de abandono en apps de salud.", "tableData": [
+      { "h": "Players", "items": ["Ecosistemas tech", "Apps de nutrición"], "icon": "Smartphone" },
+      { "h": "Éxito", "items": ["Medición puntual", "Registro de datos"], "icon": "CheckCircle2" },
+      { "h": "Fallo", "items": ["Cambio de hábitos", "Abandono prematuro"], "icon": "XCircle" }
+    ]},
+    { "id": 13, "type": "HERO_GLOW", "title": "BioLife", "subtitle": "La Propuesta de Valor", "highlight": "Plan personal, claro y sostenible para la salud diaria basado en confianza." },
+    { "id": 16, "type": "STEPS", "title": "Roadmap 2026", "subtitle": "Crecimiento", "items": ["Fase 1: MVP Core Experience", "Fase 2: Integración de Ecosistemas", "Fase 3: Escala Global & NaaS"] },
+    { "id": 28, "type": "HERO_FINAL", "title": "BioLife 2026", "subtitle": "Confianza • Decisión • Adherencia", "highlight": "Tenemos la escala. Tenemos la ciencia. Vamos a ejecutar." }
+  ]
+}
