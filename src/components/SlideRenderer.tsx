@@ -26,10 +26,11 @@ const IconMapper: React.FC<{ name?: string; size?: number; className?: string }>
 interface SlideRendererProps {
   slide: Slide;
   buildIndex: number;
+  staticMode?: boolean; // New prop to disable animations for PDF export
 }
 
 // Subcomponent for Generic Bento Item
-const BentoCard: React.FC<{ item: BentoItem; delay: number; isVisible: boolean }> = ({ item, delay, isVisible }) => {
+const BentoCard: React.FC<{ item: BentoItem; delay: number; isVisible: boolean; staticMode?: boolean }> = ({ item, delay, isVisible, staticMode }) => {
   const getSpan = (s?: string) => {
     switch(s) {
       case 'xl': return 'md:col-span-4';
@@ -50,7 +51,7 @@ const BentoCard: React.FC<{ item: BentoItem; delay: number; isVisible: boolean }
 
   return (
     <motion.div
-      initial="initial"
+      initial={staticMode ? "animate" : "initial"}
       animate={isVisible ? "animate" : "initial"}
       variants={{
         initial: { opacity: 0, scale: 0.9, y: 30, filter: 'blur(10px)' },
@@ -73,26 +74,27 @@ const BentoCard: React.FC<{ item: BentoItem; delay: number; isVisible: boolean }
         {item.description && <p className="text-sm md:text-base text-gray-400 font-light leading-relaxed">{item.description}</p>}
       </div>
 
-      {/* Micro-interaction: Hover Gradient */}
-      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      {/* Micro-interaction: Hover Gradient - Hidden in static mode to avoid glitches */}
+      {!staticMode && <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />}
     </motion.div>
   );
 };
 
-export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex }) => {
+export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex, staticMode = false }) => {
   const shouldReduceMotion = useReducedMotion();
 
   const containerVariants: Variants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08 } }
+    initial: { opacity: staticMode ? 1 : 0 },
+    animate: { opacity: 1, transition: { staggerChildren: (shouldReduceMotion || staticMode) ? 0 : 0.08 } }
   };
 
   const itemVariants: Variants = {
-    initial: { y: shouldReduceMotion ? 0 : 30, opacity: 0, scale: shouldReduceMotion ? 1 : 0.98 },
+    initial: { y: (shouldReduceMotion || staticMode) ? 0 : 30, opacity: staticMode ? 1 : 0, scale: (shouldReduceMotion || staticMode) ? 1 : 0.98 },
     animate: { y: 0, opacity: 1, scale: 1, transition: { type: "spring", damping: 20, stiffness: 100 } }
   };
 
   const isVisible = (index: number) => {
+    if (staticMode) return true; // Always visible in PDF
     if (!slide.builds) return true;
     return index <= buildIndex;
   };
@@ -100,7 +102,7 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
   switch (slide.type) {
     case "KINETIC_BRIDGE":
       return (
-        <motion.div variants={containerVariants} initial="initial" animate="animate" className="flex flex-col items-center justify-center text-center px-4 max-w-7xl h-full">
+        <motion.div variants={containerVariants} initial="initial" animate="animate" className="flex flex-col items-center justify-center text-center px-4 max-w-7xl h-full w-full">
           <motion.div variants={itemVariants} className="mb-8">
             <span className="text-blue-500 font-bold uppercase tracking-[1em] text-xs md:text-sm">{slide.subtitle}</span>
           </motion.div>
@@ -111,14 +113,21 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
           >
             {slide.title.split(' ').map((word, i) => (
               <span key={i} className="inline-block mr-4 relative">
-                <span className="absolute top-0 left-0 text-blue-500 blur-lg opacity-30">{word}</span>
-                <motion.span 
-                  className="relative z-10 block"
-                  animate={{ x: [0, 10, 0], skewX: [0, -10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
-                >
-                  {word}
-                </motion.span>
+                {/* Static mode: simple text, Dynamic mode: animated */}
+                {staticMode ? (
+                  <span className="relative z-10 block text-white">{word}</span>
+                ) : (
+                  <>
+                    <span className="absolute top-0 left-0 text-blue-500 blur-lg opacity-30">{word}</span>
+                    <motion.span 
+                      className="relative z-10 block"
+                      animate={{ x: [0, 10, 0], skewX: [0, -10, 0] }}
+                      transition={{ duration: 6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
+                    >
+                      {word}
+                    </motion.span>
+                  </>
+                )}
               </span>
             ))}
           </motion.h1>
@@ -140,13 +149,15 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
               <motion.span variants={itemVariants} className="text-blue-500 font-bold tracking-widest text-xs uppercase mb-2 block">{slide.subtitle}</motion.span>
               <motion.h1 variants={itemVariants} className="text-4xl md:text-6xl font-black tracking-tight">{slide.title}</motion.h1>
             </div>
-            <motion.div variants={itemVariants} className="hidden md:block text-right">
-              <Icons.Grid className="text-white/20" size={32} />
-            </motion.div>
+            {!staticMode && (
+              <motion.div variants={itemVariants} className="hidden md:block text-right">
+                <Icons.Grid className="text-white/20" size={32} />
+              </motion.div>
+            )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-min gap-6">
             {slide.bentoItems?.map((item, i) => (
-              <BentoCard key={i} item={item} delay={i * 0.1} isVisible={isVisible(i)} />
+              <BentoCard key={i} item={item} delay={i * 0.1} isVisible={isVisible(i)} staticMode={staticMode} />
             ))}
           </div>
         </motion.div>
@@ -165,9 +176,9 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
               <motion.div 
                 key={i} 
                 variants={itemVariants}
-                initial="initial"
+                initial={staticMode ? "animate" : "initial"}
                 animate={isVisible(i) ? "animate" : "initial"}
-                className={`${spanClass} ${TOKENS.glass} ${TOKENS.radiusMd} ${TOKENS.shadow} p-8 flex flex-col justify-between group hover:bg-white/[0.05] transition-all duration-500`}
+                className={`${spanClass} ${TOKENS.glass} ${TOKENS.radiusMd} ${TOKENS.shadow} p-8 flex flex-col justify-between group`}
               >
                 <div className="flex justify-between items-start">
                   <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
@@ -202,13 +213,15 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
               <motion.div 
                 key={i} 
                 variants={itemVariants} 
-                initial="initial"
+                initial={staticMode ? "animate" : "initial"}
                 animate={isVisible(i) ? "animate" : "initial"}
-                className={`${TOKENS.glass} ${TOKENS.radiusMd} p-10 flex flex-col gap-8 relative overflow-hidden group hover:bg-white/[0.05] transition-colors`}
+                className={`${TOKENS.glass} ${TOKENS.radiusMd} p-10 flex flex-col gap-8 relative overflow-hidden group`}
               >
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity rotate-12 scale-150 pointer-events-none">
-                  <IconMapper name={col.icon} size={100} />
-                </div>
+                {!staticMode && (
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity rotate-12 scale-150 pointer-events-none">
+                    <IconMapper name={col.icon} size={100} />
+                  </div>
+                )}
                 <div className="flex items-center gap-4 border-b border-white/10 pb-6 z-10">
                   <div className={`p-3 rounded-xl ${i === 1 ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50' : 'bg-white/5 text-gray-400'}`}>
                     <IconMapper name={col.icon} size={24} />
@@ -241,7 +254,7 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
             <motion.div 
               key={i} 
               variants={itemVariants} 
-              initial="initial"
+              initial={staticMode ? "animate" : "initial"}
               animate={isVisible(i) ? "animate" : "initial"}
               className={`${TOKENS.glassStrong} ${TOKENS.radiusMd} ${TOKENS.shadow} p-10 text-center relative overflow-hidden group`}
             >
@@ -268,11 +281,11 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ slide, buildIndex 
 
     default: // HERO / FINAL fallback
       return (
-        <motion.article variants={containerVariants} initial="initial" animate="animate" className="flex flex-col items-center text-center max-w-5xl mx-auto px-4">
+        <motion.article variants={containerVariants} initial="initial" animate="animate" className="flex flex-col items-center text-center max-w-5xl mx-auto px-4 w-full">
           <motion.div variants={itemVariants} className="mb-10 relative">
-             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
+             {!staticMode && <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />}
              <div className={`${TOKENS.glassStrong} p-8 rounded-full text-blue-400 relative border border-blue-500/20`}>
-                <Icons.Activity size={56} className="animate-pulse" />
+                <Icons.Activity size={56} className={staticMode ? "" : "animate-pulse"} />
              </div>
           </motion.div>
           <motion.h1 variants={itemVariants} className={`text-6xl md:text-[8rem] font-black mb-8 tracking-tighter leading-[0.9] uppercase ${TOKENS.textGradient}`}>
