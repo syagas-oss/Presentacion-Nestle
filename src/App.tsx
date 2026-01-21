@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
@@ -26,17 +25,17 @@ const App: React.FC = () => {
   const pdfContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Intentamos cargar desde la ruta pública estándar
+    // Solo cargamos desde la ruta estandarizada en public/content/
     fetch('./content/content.json')
       .then(res => {
-        if (!res.ok) return fetch('./content.json'); // Fallback si la estructura cambia
+        if (!res.ok) throw new Error("No se pudo cargar content.json");
         return res;
       })
       .then(res => res.json())
       .then(setData)
       .catch(err => {
-        console.error("Error cargando contenido:", err);
-        setError("Error al inicializar BIO_LIFE. Verifique la conexión.");
+        console.error("Error loading content:", err);
+        setError("System Error: Could not load strategic data.");
       });
   }, []);
 
@@ -92,8 +91,7 @@ const App: React.FC = () => {
       const slides = pdfContainerRef.current.children;
       for (let i = 0; i < slides.length; i++) {
         const slideElement = slides[i] as HTMLElement;
-        // Pequeño delay para asegurar que el DOM esté listo
-        await new Promise(r => setTimeout(r, 400));
+        await new Promise(r => setTimeout(r, 400)); // Wait for render
 
         const canvas = await html2canvas(slideElement, {
           scale: 2,
@@ -108,8 +106,8 @@ const App: React.FC = () => {
 
       pdf.save('Nestle-BioLife-Presentation.pdf');
     } catch (err) {
-      console.error("Error en PDF:", err);
-      alert("Error al generar PDF. Intente de nuevo.");
+      console.error("PDF Error:", err);
+      alert("Error generating PDF export.");
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -132,11 +130,12 @@ const App: React.FC = () => {
   }, [navigateForward, navigateBackward, showOverview, toggleFullscreen, generatePDF, isGeneratingPDF]);
 
   if (!data) return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500">
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500 font-sans">
       <div className="text-4xl font-black animate-pulse tracking-tighter italic mb-4">BIO_LIFE_SYSTEM_INIT...</div>
       <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
         <motion.div className="h-full bg-blue-500" initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 2, repeat: Infinity }} />
       </div>
+      {error && <div className="mt-4 text-red-500 font-mono text-xs">{error}</div>}
     </div>
   );
 
@@ -145,7 +144,6 @@ const App: React.FC = () => {
   return (
     <div ref={containerRef} className="w-full h-screen bg-[#050810] text-white overflow-hidden relative outline-none select-none font-sans" tabIndex={0}>
       
-      {/* OVERLAY DE GENERACIÓN DE PDF */}
       <AnimatePresence>
         {isGeneratingPDF && (
           <motion.div 
@@ -162,7 +160,6 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* POOL OCULTO PARA PDF */}
       <div ref={pdfContainerRef} style={{ position: 'fixed', top: 0, left: -20000, width: '1920px', zIndex: -100 }}>
         {data.slides.map((slide, idx) => (
           <div key={`pdf-${slide.id}`} style={{ width: '1920px', height: '1080px', background: '#050810', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -175,7 +172,6 @@ const App: React.FC = () => {
         ))}
       </div>
 
-      {/* FONDO 3D */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <Canvas dpr={[1, 2]}>
           <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={40} />
@@ -183,10 +179,8 @@ const App: React.FC = () => {
         </Canvas>
       </div>
 
-      {/* GRADIENTE HUD */}
       <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,#050810_130%)] pointer-events-none" />
       
-      {/* CONTENIDO PRINCIPAL */}
       <main className="relative z-20 h-full w-full flex items-center justify-center px-6 md:px-20">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -203,7 +197,6 @@ const App: React.FC = () => {
         </AnimatePresence>
       </main>
 
-      {/* BARRA DE PROGRESO SUPERIOR */}
       <div className="absolute top-0 left-0 w-full h-1 bg-white/5 z-50">
         <motion.div 
           className="h-full bg-blue-600 shadow-[0_0_20px_rgba(59,130,246,1)]" 
@@ -212,7 +205,6 @@ const App: React.FC = () => {
         />
       </div>
 
-      {/* HUD DE CONTROLES - VISIBLE AL HOVER */}
       <div className="absolute bottom-8 right-8 z-50 group flex items-center justify-end">
         <div className="flex items-center gap-3 p-4 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl transition-all duration-500 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0">
           
@@ -229,7 +221,6 @@ const App: React.FC = () => {
           <button onClick={() => setShowOverview(true)} className="p-3 glass rounded-xl hover:bg-white/10 active:scale-90 transition-all" title="Ver todas las fases"><Grid size={18} /></button>
           <button onClick={() => setShowNotes(prev => !prev)} className={`p-3 glass rounded-xl hover:bg-white/10 transition-all ${showNotes ? 'text-blue-400 border-blue-500/50' : ''}`} title="Notas del orador"><StickyNote size={18} /></button>
           
-          {/* BOTÓN DE PDF - CRÍTICO */}
           <button 
             onClick={generatePDF} 
             disabled={isGeneratingPDF} 
@@ -245,7 +236,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* VENTANA DE NOTAS */}
       <AnimatePresence>
         {showNotes && (
           <motion.div 
@@ -263,7 +253,6 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* VISTA OVERVIEW (MAPA) */}
       <AnimatePresence>
         {showOverview && (
           <motion.div 

@@ -2,104 +2,288 @@
 {
   "slides": [
     { 
-      "id": 1, "type": "HERO", "title": "Nestlé Nutrición", "subtitle": "Digital Transformation", 
+      "id": 1, "type": "HERO", "title": "Nestlé\nNutrición", "subtitle": "Digital Transformation", 
       "highlight": "Ciencia aplicada + Capacidad de escala global",
       "speakerNotes": "Bienvenidos. Hoy presentamos la evolución de NHS hacia un ecosistema digital integrado."
     },
     { 
-      "id": 2, "type": "BENTO_DATA", "title": "Escala Real", "subtitle": "Nestlé Global", 
+      "id": 2, "type": "BENTO_DATA", "title": "Nestlé Global", "subtitle": "Métricas", 
       "stats": [
-        { "v": "185", "l": "Mercados Activos", "size": "lg", "icon": "Globe", "trend": "12" },
-        { "v": "CHF 91B", "l": "Ventas Totales", "size": "sm", "icon": "TrendingUp" },
-        { "v": "277k", "l": "Talento", "size": "sm", "icon": "Users" },
-        { "v": "Top 1", "l": "Health Science", "size": "md", "icon": "Zap" }
+        { "v": "185", "l": "Mercados Activos", "size": "md", "icon": "Globe" },
+        { "v": "CHF 91B", "l": "Ventas Totales", "size": "md", "icon": "TrendingUp" },
+        { "v": "277k", "l": "Talento", "size": "md", "icon": "Users" }
       ],
-      "builds": ["Global Footprint", "Financials", "Human Capital", "Market Position"],
-      "speakerNotes": "Nuestra infraestructura es nuestro mayor activo competitivo."
+      "speakerNotes": "Nuestra infraestructura global es la base sobre la que construimos."
+    },
+    {
+      "id": 3, "type": "KINETIC_BRIDGE", "title": "EL LEGADO", "subtitle": "Historia",
+      "highlight": "Más de un siglo transformando la nutrición en ciencia",
+      "speakerNotes": "Una historia de innovación constante."
+    },
+    {
+      "id": 4, "type": "TIMELINE", "title": "Trayectoria", "subtitle": "Estratégica (1866-2026)",
+      "timeline": [
+        { "year": "1866", "event": "Fundación y Primeros Años", "icon": "Home" },
+        { "year": "1905", "event": "Expansión y Fusiones", "icon": "Maximize" },
+        { "year": "1947", "event": "Diversificación Global", "icon": "Globe2" },
+        { "year": "1999", "event": "Liderazgo en Nutrición", "icon": "HeartPulse" },
+        { "year": "2011", "event": "Nestlé Health Science", "icon": "Stethoscope", "highlight": true },
+        { "year": "2026", "event": "Futuro Digital", "icon": "Cpu" }
+      ],
+      "speakerNotes": "Hemos integrado el hito crítico de 2011 en nuestra línea de tiempo principal."
     },
     { 
-      "id": 5, "type": "BENTO_DATA", "title": "NHS Impact", "subtitle": "Health Science", 
+      "id": 6, "type": "BENTO_DATA", "title": "Impacto NHS", "subtitle": "Nestlé Health Science", 
       "stats": [
-        { "v": "150", "l": "Países", "size": "md", "icon": "Map" },
-        { "v": "$7.6B", "l": "Ventas USD", "size": "lg", "icon": "PieChart", "trend": "8.5" },
-        { "v": "11k+", "l": "Científicos", "size": "sm", "icon": "Microscope" }
+        { "v": "+140", "l": "Países", "size": "md", "icon": "MapPin" },
+        { "v": "7.6B", "l": "Ventas USD", "size": "md", "icon": "PieChart", "trend": "8.5" },
+        { "v": "11k", "l": "Talento", "size": "md", "icon": "UserCheck" }
       ],
-      "speakerNotes": "Nestlé Health Science no es un nicho, es una potencia de 7.6B."
+      "speakerNotes": "NHS ya opera a una escala masiva."
     },
     { 
-      "id": 6, "type": "ALERT", "title": "Digital Chaos", "subtitle": "Market Signals", 
+      "id": 7, "type": "KINETIC_BRIDGE", "title": "CAOS DIGITAL", "subtitle": "Contexto",
+      "highlight": "SEÑALES URGENTES",
+      "speakerNotes": "Pero el entorno digital actual es caótico."
+    },
+    { 
+      "id": 8, "type": "ALERT", "title": "SALUD DIGITAL", "subtitle": "Realidad del Usuario", 
       "cards": [
-        { "t": "68% Desconexión", "d": "Usuarios buscan salud online sin guía clínica.", "icon": "Search" },
-        { "t": "Info-xicación", "d": "Exceso de ruido y desconfianza.", "icon": "Radio" },
-        { "t": "Privacidad", "d": "72% teme el uso indebido de datos.", "icon": "ShieldAlert" }
+        { "t": "Búsquedas en Salud", "d": "Hábito Instalado", "icon": "Search" },
+        { "t": "Decisiones diarias", "d": "Sin guía clínica", "icon": "AlertTriangle" },
+        { "t": "Interés", "d": "En prevención", "icon": "Activity" }
       ],
-      "builds": ["Búsquedas sin guía", "Ruido informativo", "Crisis de privacidad"],
-      "speakerNotes": "El usuario está perdido y desconfiado. La oportunidad es el orden."
+      "speakerNotes": "El usuario busca salud, pero sin guía."
     },
     { 
-      "id": 8, "type": "BENTO_MARKET", "title": "Competencia", "subtitle": "Análisis de Mercado", 
+      "id": 9, "type": "ALERT", "title": "DOLORES", "subtitle": "Sin Resolver", 
+      "cards": [
+        { "t": "Info-xicación", "d": "Poca claridad", "icon": "CloudFog" },
+        { "t": "Consejos contradictorios", "d": "No sé qué creer", "icon": "HelpCircle" },
+        { "t": "Privacidad", "d": "72% Teme uso indebido de datos", "icon": "ShieldAlert" }
+      ],
+      "speakerNotes": "Confusión y desconfianza reinan."
+    },
+    { 
+      "id": 10, "type": "HERO_GLOW", "title": "PLAYERS", "subtitle": "Mercado",
+      "highlight": "El mercado está lleno… y sigue abierto",
+      "speakerNotes": "Hay muchos actores, pero la oportunidad persiste."
+    },
+    { 
+      "id": 11, "type": "BENTO_MARKET", "title": "¿QUÉ HACEN HOY?", "subtitle": "Análisis Competitivo", 
       "tableData": [
-        { "h": "Tech Giants", "items": ["Hardware Driven", "Medición Pasiva"], "icon": "Cpu" },
-        { "h": "BioLife", "items": ["Science Driven", "Acción Clínica"], "icon": "Activity" },
-        { "h": "Apps Nicho", "items": ["Sin Validación", "Churn Alto (70%)"], "icon": "XCircle" }
+        { "h": "PLAYER", "items": ["Ecosistemas tech", "Apps de nutrición/fitness"], "icon": "Smartphone" },
+        { "h": "ACIERTOS", "items": ["Medición precisa", "Registro"], "icon": "CheckCircle" },
+        { "h": "SIN RESOLVER", "items": ["Cambio de hábitos", "Abandono"], "icon": "XCircle" }
       ],
-      "speakerNotes": "Nadie ocupa el centro: Ciencia + Confianza + Tecnología."
+      "speakerNotes": "Miden bien, pero no logran cambiar hábitos a largo plazo."
     },
     { 
-      "id": 9, "type": "KINETIC_BRIDGE", "title": "EL GRAN HUECO", "subtitle": "La Oportunidad", 
-      "highlight": "Ser la capa de decisión confiable entre el dato y el hábito.",
-      "speakerNotes": "Aquí es donde entramos nosotros. Llenamos el vacío de la confianza."
+      "id": 12, "type": "HERO_GLOW", "title": "OPORTUNIDAD", "subtitle": "Visión",
+      "highlight": "SER LA CAPA CONFIABLE",
+      "speakerNotes": "Nuestra oportunidad es ser la referencia de confianza absoluta."
     },
     { 
-      "id": 10, "type": "BENTO_GRID", "title": "DAFO 2026", "subtitle": "Strategic Outlook",
+      "id": 13, "type": "PYRAMID", "title": "EL GAP", "subtitle": "Posicionamiento",
       "bentoItems": [
-        { "title": "Fortalezas", "subtitle": "Internal", "description": "Escala Global y Respaldo Científico.", "icon": "ShieldCheck", "variant": "accent", "span": "md" },
-        { "title": "Oportunidades", "subtitle": "External", "description": "Modelo NaaS y Economía de Suscripción.", "icon": "Zap", "variant": "glass", "span": "md" },
-        { "title": "Debilidades", "subtitle": "Internal", "description": "Falta de canal B2C directo histórico.", "icon": "AlertCircle", "variant": "outline", "span": "sm" },
-        { "title": "Amenazas", "subtitle": "External", "description": "Velocidad de iteración de Big Tech.", "icon": "Siren", "variant": "glassStrong", "span": "lg" }
+        { "title": "Confianza", "description": "Respaldo Científico", "icon": "ShieldCheck" },
+        { "title": "Decisión", "description": "Guía Clara", "icon": "GitMerge" },
+        { "title": "Adherencia", "description": "Resultados Reales", "icon": "Repeat" }
       ],
-      "builds": ["Strengths", "Opportunities", "Weaknesses", "Threats"]
+      "speakerNotes": "Construimos desde la base: adherencia, decisión, confianza."
     },
     { 
-      "id": 13, "type": "HERO_GLOW", "title": "BioLife", "subtitle": "The Proposition", 
-      "highlight": "Plan personal, claro y sostenible para la salud diaria.",
-      "speakerNotes": "BioLife simplifica la complejidad biológica en acciones diarias."
+      "id": 14, "type": "HERO", "title": "¿POR QUÉ\nTRANSFORMARNOS?", "subtitle": "Strategic Why",
+      "speakerNotes": "¿Por qué ahora?"
     },
     { 
-      "id": 14, "type": "BENTO_GRID", "title": "Estrategia", "subtitle": "Ventaja Competitiva",
+      "id": 15, "type": "QUADRANT", "title": "EL MERCADO LO EXIGE!", "subtitle": "DAFO",
       "bentoItems": [
-        { "title": "Churn Actual", "value": "70%", "description": "Tasa de abandono mercado", "variant": "glassStrong", "span": "sm", "icon": "ArrowDownRight" },
-        { "title": "Pricing", "value": "12.99€", "description": "Punto dulce de entrada", "variant": "accent", "span": "sm", "icon": "Tag" },
-        { "title": "Valor Real", "description": "Claridad Ejecutable + Trazabilidad Total", "variant": "glass", "span": "lg", "icon": "CheckCircle" }
+        { "title": "Debilidades (D)", "description": "Relación directa limitada y aprendizaje lento sin dato propio", "icon": "AlertOctagon", "variant": "outline" },
+        { "title": "Fortalezas (F)", "description": "Escala, ciencia, marcas y capacidad operativa", "icon": "Award", "variant": "glassStrong" },
+        { "title": "Oportunidades (O)", "description": "Personalización, prevención y suscripción", "icon": "Zap", "variant": "accent" },
+        { "title": "Amenazas (A)", "description": "Big Tech, saturación de apps y crisis de confianza", "icon": "Siren", "variant": "outline" }
       ]
     },
     { 
-      "id": 16, "type": "STEPS", "title": "Roadmap", "subtitle": "Growth Plan", 
-      "items": ["MVP: Core Experience", "Integration: Ecosystems", "Scale: Global NaaS"],
-      "builds": ["MVP Release", "Integration Phase", "Global Scale"],
-      "speakerNotes": "Tres horizontes de crecimiento claros."
+      "id": 16, "type": "CARDS_CHOICE", "title": "TRES CAMINOS", "subtitle": "Opciones Estratégicas", 
+      "items": [
+        { "t": "MARKETPLACE", "d": "Transacción optimizada", "icon": "ShoppingCart" },
+        { "t": "CERTIFICACIÓN", "d": "Ser sello de confianza", "icon": "BadgeCheck" },
+        { "t": "NUTRITION-AS-A-SERVICE", "d": "Relación + aprendizaje + retención", "icon": "Infinity" }
+      ],
+      "speakerNotes": "Tenemos tres rutas posibles."
     },
     { 
-      "id": 19, "type": "BENTO_GRID", "title": "Tech Stack", "subtitle": "Arquitectura",
+      "id": 17, "type": "CARDS_CHOICE", "title": "UNA ELECCIÓN", "subtitle": "El camino elegido",
+      "items": [
+        { "t": "MARKETPLACE", "d": "Transacción optimizada", "icon": "ShoppingCart" },
+        { "t": "CERTIFICACIÓN", "d": "Ser sello de confianza", "icon": "BadgeCheck" },
+        { "t": "NUTRITION-AS-A-SERVICE", "d": "Relación + aprendizaje + retención", "icon": "Infinity" }
+      ],
+      "speakerNotes": "Elegimos NaaS."
+    },
+    { 
+      "id": 18, "type": "BENTO_MARKET", "title": "¿POR QUÉ NaaS?", "subtitle": "Comparativa de Valor", 
+      "tableData": [
+        { "h": "MARKETPLACE", "items": ["Impacto: Media", "Dif: Baja", "Viabilidad: Alta", "Confianza: Media", "Retención: Baja"], "icon": "ShoppingCart" },
+        { "h": "CERTIFICACIÓN", "items": ["Impacto: Baja-Media", "Dif: Media", "Viabilidad: Media", "Confianza: Alta", "Retención: Media"], "icon": "BadgeCheck" },
+        { "h": "NaaS", "items": ["Impacto: ALTA", "Dif: ALTA", "Viabilidad: Media-Alta", "Confianza: MUY ALTA", "Retención: ALTA"], "icon": "Infinity" }
+      ],
+      "speakerNotes": "NaaS maximiza el impacto y la diferenciación."
+    },
+    { 
+      "id": 19, "type": "HERO_FINAL", "title": "BIOLIFE", "subtitle": "La Solución",
+      "speakerNotes": "Presentamos BioLife."
+    },
+    { 
+      "id": 20, "type": "CIRCULAR", "title": "PROPUESTA DE VALOR", "subtitle": "Claro, Personal y Sostenible",
       "bentoItems": [
-        { "title": "Experience Layer", "description": "Mobile & Web Apps", "icon": "Smartphone", "variant": "glass", "span": "xl" },
-        { "title": "Intelligence", "description": "AI & Bio-Algorithms", "icon": "BrainCircuit", "variant": "glassStrong", "span": "md" },
-        { "title": "Data Lake", "description": "Secure Health Records", "icon": "Database", "variant": "outline", "span": "sm" },
-        { "title": "Trust Layer", "description": "Compliance & Privacy", "icon": "Lock", "variant": "accent", "span": "sm" }
+        { "title": "Señales", "description": "Input de datos", "icon": "Radio" },
+        { "title": "Decisiones", "description": "Procesamiento", "icon": "Cpu" },
+        { "title": "Hábitos", "description": "Acción diaria", "icon": "Repeat" },
+        { "title": "Mejora", "description": "Resultado medible", "icon": "TrendingUp" }
       ]
     },
     { 
-      "id": 24, "type": "BENTO_GRID", "title": "North Star", "subtitle": "Key Performance Indicators",
+      "id": 21, "type": "BENTO_GRID", "title": "VENTAJA", "subtitle": "No competimos por más datos",
       "bentoItems": [
-        { "title": "Adherencia", "value": "80%", "description": "Objetivo principal", "variant": "accent", "span": "md", "icon": "Heart" },
-        { "title": "Retention", "value": "D30", "description": "Stickiness", "variant": "glass", "span": "sm", "icon": "Magnet" },
-        { "title": "LTV / CAC", "value": "3.5x", "description": "Eficiencia", "variant": "glass", "span": "sm", "icon": "Scale" }
+        { "title": "Acción", "description": "¿Qué hago hoy?", "icon": "PlayCircle", "variant": "glassStrong", "span": "md" },
+        { "title": "Confianza", "description": "¿Por qué esto me aplica a mí?", "icon": "ShieldCheck", "variant": "glassStrong", "span": "md" },
+        { "title": "Adherencia", "description": "Quick win + seguimiento + ajuste", "icon": "Link", "variant": "glassStrong", "span": "xl" }
       ]
     },
     { 
-      "id": 28, "type": "HERO_FINAL", "title": "BIO•LIFE", "subtitle": "Future • Science • Trust", 
-      "highlight": "Tenemos la escala. Tenemos la ciencia. Vamos a ejecutar.",
-      "speakerNotes": "Gracias. El futuro empieza hoy."
+      "id": 22, "type": "ROADMAP", "title": "12,99€/MES", "subtitle": "Hacer los datos útiles y usables",
+      "items": [
+        { "t": "Claridad", "d": "Plan ejecutable", "icon": "Sun" },
+        { "t": "Confianza", "d": "Criterio y trazabilidad", "icon": "Lock" },
+        { "t": "Progreso", "d": "Seguimiento + ajuste", "icon": "BarChart2" }
+      ]
+    },
+    { 
+      "id": 23, "type": "ROADMAP", "title": "ROADMAP", "subtitle": "3 Fases, 18 Meses", 
+      "items": [
+        { "t": "Fase 01", "d": "0-3 meses: MVP", "icon": "Flag" },
+        { "t": "Fase 02", "d": "3-9 meses: Integraciones + Personalización", "icon": "Layers" },
+        { "t": "Fase 03", "d": "9-18 meses: Escala + Optimización", "icon": "Rocket" }
+      ]
+    },
+    { 
+      "id": 24, "type": "BENTO_GRID", "title": "PRIMER RELEASE", "subtitle": "MVP Features", 
+      "bentoItems": [
+          { "title": "App Conversacional", "icon": "MessageSquare", "variant": "glass", "span": "md" },
+          { "title": "Onboarding Rápido", "icon": "Zap", "variant": "glass", "span": "md" },
+          { "title": "Plan 7 Días", "icon": "Calendar", "variant": "glass", "span": "sm" },
+          { "title": "Check-in Semanal", "icon": "CheckSquare", "variant": "glass", "span": "sm" },
+          { "title": "Métricas Visibles", "icon": "BarChart2", "variant": "glass", "span": "md" }
+      ]
+    },
+    { 
+      "id": 25, "type": "HERO_GLOW", "title": "DEMO", "subtitle": "BioLife no informa; Guía",
+      "speakerNotes": "Veamos cómo funciona."
+    },
+    { 
+      "id": 26, "type": "VIDEO", "title": "Video Demo", "subtitle": "Fullscreen"
+    },
+    { 
+      "id": 27, "type": "HERO", "title": "ARQUITECTURA\nBIOLIFE", "subtitle": "Technology Stack",
+      "speakerNotes": "La base técnica."
+    },
+    { 
+      "id": 28, "type": "BENTO_GRID", "title": "GOBIERNO DEL DATO", "subtitle": "Flujo de Valor",
+      "bentoItems": [
+        { "title": "Consentimiento", "description": "Para qué NO / Para qué SÍ", "icon": "ThumbsUp", "variant": "accent", "span": "xl" },
+        { "title": "Trazabilidad", "description": "Quién / Qué / Cuándo", "icon": "FileText", "variant": "glass", "span": "md" },
+        { "title": "Auditoría", "description": "Monitoreo constante", "icon": "Eye", "variant": "glass", "span": "sm" },
+        { "title": "Minimización", "description": "Solo lo necesario", "icon": "Minimize2", "variant": "glass", "span": "sm" },
+        { "title": "Derechos", "description": "Acceso / Portabilidad / Borrado", "icon": "UserCheck", "variant": "glass", "span": "md" }
+      ]
+    },
+    { 
+      "id": 29, "type": "BENTO_GRID", "title": "LEGAL Y COMPLIANCE", "subtitle": "Pilares de Confianza",
+      "bentoItems": [
+        { "title": "GDPR", "description": "Consentimiento / Derechos / Seguridad", "icon": "Shield", "variant": "glassStrong", "span": "md" },
+        { "title": "Claims", "description": "Qué prometemos / Qué NO prometemos", "icon": "MessageSquare", "variant": "glassStrong", "span": "md" },
+        { "title": "Partners", "description": "Contratos y Auditoría", "icon": "Users", "variant": "glassStrong", "span": "xl" }
+      ]
+    },
+    { 
+      "id": 30, "type": "ROADMAP", "title": "PROCESOS", "subtitle": "Diferenciales", 
+      "items": [
+        { "t": "Onboarding", "d": "Inicio", "icon": "UserPlus" },
+        { "t": "Plan 7 días", "d": "Rutina", "icon": "Calendar" },
+        { "t": "Check-in", "d": "Semanal", "icon": "CheckCircle" },
+        { "t": "Ajuste", "d": "Optimización", "icon": "Sliders" }
+      ]
+    },
+    { 
+      "id": 31, "type": "FUNNEL", "title": "GO-TO-MARKET", "subtitle": "Estrategia Comercial",
+      "bentoItems": [
+        { "title": "Preventivos Activos", "subtitle": "Target 25-45", "description": "Hábitos + rendimiento", "icon": "Zap", "variant": "accent", "span": "md" },
+        { "title": "Bienestar y Control", "subtitle": "Target 35-55", "description": "Energía, sueño, digestión", "icon": "Heart", "variant": "accent", "span": "md" }
+      ]
+    },
+    { 
+      "id": 32, "type": "STEPS", "title": "KPIs", "subtitle": "Lo que vamos a medir", 
+      "items": [
+        { "t": "Legal y Cumplimiento", "d": "Auditorías superadas", "icon": "CheckSquare" },
+        { "t": "Seguridad y Privacidad", "d": "Incidentes 0", "icon": "ShieldCheck" },
+        { "t": "Gobernanza de Datos", "d": "Calidad del dato", "icon": "FileCheck" }
+      ]
+    },
+    { 
+      "id": 33, "type": "SQUADS", "title": "SQUADS", "subtitle": "Equipo BioLife",
+      "bentoItems": [
+        { "title": "Clínica & Ciencia", "variant": "glass", "icon": "Microscope" },
+        { "title": "Operaciones & CS", "variant": "glass", "icon": "Settings" },
+        { "title": "Crecimiento & Marketing", "variant": "glass", "icon": "TrendingUp" },
+        { "title": "Producto & UX", "variant": "glass", "icon": "Smartphone" },
+        { "title": "Datos & Confianza", "variant": "glass", "icon": "Shield" }
+      ]
+    },
+    { 
+      "id": 34, "type": "BENTO_GRID", "title": "ROLES TRANSVERSALES", "subtitle": "Velocidad sin romper confianza", 
+      "bentoItems": [
+        { "title": "Legal y Cumplimiento", "description": "Guardianes normativos", "icon": "Scale", "span": "md", "variant": "glassStrong" },
+        { "title": "Seguridad y Privacidad", "description": "Protección del usuario", "icon": "Lock", "span": "md", "variant": "glassStrong" },
+        { "title": "Gobernanza de Datos", "description": "Integridad de la información", "icon": "Database", "span": "xl", "variant": "accent" }
+      ]
+    },
+    { 
+      "id": 35, "type": "QUADRANT", "title": "GOBERNANZA Y ESG", "subtitle": "Estructura de Control", 
+      "bentoItems": [
+        { "title": "Steering Committee", "icon": "Users", "variant": "glass", "description": "Dirección Estratégica" },
+        { "title": "Medical Board", "icon": "Stethoscope", "variant": "glass", "description": "Supervisión Ética" },
+        { "title": "Data Governance", "icon": "Database", "variant": "glass", "description": "Control de Datos" },
+        { "title": "Dueños de KPIs", "icon": "Target", "variant": "glass", "description": "Responsabilidad Directa" }
+      ]
+    },
+    { 
+      "id": 36, "type": "BENTO_DATA", "title": "Gobernanza y ESG", "subtitle": "3 Pilares", 
+      "stats": [
+        { "v": "01", "l": "Social", "size": "md", "icon": "Users" },
+        { "v": "02", "l": "Gobernanza", "size": "md", "icon": "Scale" },
+        { "v": "03", "l": "Ambiental", "size": "md", "icon": "Leaf" }
+      ]
+    },
+    { 
+      "id": 37, "type": "ECONOMIC", "title": "MODELO ECONÓMICO", "subtitle": "Sostenibilidad"
+    },
+    { 
+      "id": 38, "type": "HERO_FINAL", "title": "CIERRE", "subtitle": "Resumen",
+      "highlight": "Plan claro - Privacidad real - Progreso medible",
+      "speakerNotes": "Confianza. Decisión. Adherencia."
+    },
+    { 
+      "id": 39, "type": "EXECUTIVE_SUMMARY", "title": "PROPUESTA DE VALOR", "subtitle": "Resumen Ejecutivo",
+      "bentoItems": [
+        { "title": "Valor Principal", "description": "Nutrición personalizada, predictiva y accionable, basada en datos", "icon": "Star", "variant": "glass", "span": "xl" },
+        { "title": "Factor Diferenciador", "description": "Digital Twin nutricional dinámico + Integración ciencia/datos", "icon": "Award", "variant": "glassStrong", "span": "xl" },
+        { "title": "Problemas que resolvemos", "description": "Falta de personalización & Desconexión entre datos y decisiones", "icon": "Tool", "variant": "glass", "span": "xl" },
+        { "title": "Satisfacción del Cliente", "description": "NPS, Health Outcome Satisfaction, Adherencia", "icon": "Smile", "variant": "glassStrong", "span": "xl" },
+        { "title": "Crecimiento Potencial", "description": "Democratización, Segmentación, B2B2C", "icon": "TrendingUp", "variant": "glass", "span": "xl" }
+      ]
     }
   ]
 }

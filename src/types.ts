@@ -17,6 +17,7 @@ export interface Card {
   t: string;
   d: string;
   icon?: string;
+  highlight?: boolean;
 }
 
 export interface BentoItem {
@@ -26,14 +27,22 @@ export interface BentoItem {
   subtitle?: string;
   description?: string;
   icon?: string;
-  span?: 'sm' | 'md' | 'lg' | 'xl'; // sm: 1col, md: 2cols, lg: 2x2, xl: full
+  span?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'glass' | 'glassStrong' | 'accent' | 'outline' | 'media';
   image?: string;
 }
 
+export interface TimelineItem {
+  year: string;
+  event: string;
+  description?: string;
+  icon?: string;
+  highlight?: boolean;
+}
+
 export interface Slide {
   id: number;
-  type: 'HERO' | 'HERO_GLOW' | 'HERO_FINAL' | 'BENTO_DATA' | 'BENTO_MARKET' | 'BENTO_GRID' | 'ALERT' | 'LIST' | 'STEPS' | 'TIMELINE' | 'KINETIC_BRIDGE';
+  type: 'HERO' | 'HERO_GLOW' | 'HERO_FINAL' | 'BENTO_DATA' | 'BENTO_MARKET' | 'BENTO_GRID' | 'ALERT' | 'LIST' | 'STEPS' | 'TIMELINE' | 'KINETIC_BRIDGE' | 'VIDEO' | 'PYRAMID' | 'FUNNEL' | 'CIRCULAR' | 'ROADMAP' | 'SQUADS' | 'ECONOMIC' | 'CARDS_CHOICE' | 'QUADRANT' | 'EXECUTIVE_SUMMARY';
   title: string;
   subtitle: string;
   description?: string;
@@ -43,6 +52,7 @@ export interface Slide {
   cards?: Card[];
   bentoItems?: BentoItem[];
   tableData?: TableCol[];
+  timeline?: TimelineItem[];
   speakerNotes?: string;
   builds?: string[];
 }
