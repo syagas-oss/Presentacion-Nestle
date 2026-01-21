@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Grid, StickyNote, Maximize2, Minimize2, X } from 'lucide-react';
+import { Grid, StickyNote, Maximize2, Minimize2, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Scene3D } from './components/Scene3D';
 import { SlideRenderer } from './components/SlideRenderer';
 import { ContentData } from './types';
@@ -22,37 +22,27 @@ const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Construcción robusta de la ruta para GitHub Pages y Localhost.
-    // import.meta.env.BASE_URL contiene el path configurado en vite.config.ts (./ o /repo/)
-    // Aseguramos que termine con '/' antes de concatenar el archivo.
-    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
-      ? import.meta.env.BASE_URL 
-      : `${import.meta.env.BASE_URL}/`;
-      
-    // Vite sirve los archivos de 'public' en la raíz del build.
-    // Por lo tanto, public/content/content.json es accesible en {baseUrl}content/content.json
-    const contentPath = `${baseUrl}content/content.json`;
+    // La carpeta 'public' se sirve en la raíz. 
+    // Si usas base: './' en vite config, evita la barra inicial absoluta.
+    // Para dev y build estándar, 'content/content.json' debería resolver a public/content/content.json
+    const contentUrl = 'content/content.json';
 
-    console.log("Sistema BioLife - Conectando a:", contentPath);
-
-    fetch(contentPath)
+    fetch(contentUrl)
       .then(res => {
-        if (!res.ok) {
-          throw new Error(`Error de conexión (${res.status}). Verifique la ruta: ${contentPath}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status} - No se pudo cargar ${contentUrl}`);
         return res.json();
       })
       .then(setData)
       .catch(err => {
-        console.error("Error crítico de sistema:", err);
-        setError(err.message);
+        console.error("Error crítico de carga:", err);
+        setError("Error cargando datos. Asegúrate de que public/content/content.json existe.");
       });
   }, []);
 
   const navigateForward = useCallback(() => {
     if (!data) return;
     const currentSlide = data.slides[currentSlideIndex];
-    const maxBuilds = currentSlide.builds ? currentSlide.builds.length - 1 : -1;
+    const maxBuilds = (currentSlide.builds?.length || 0) - 1;
 
     if (currentBuildIndex < maxBuilds) {
       setCurrentBuildIndex(prev => prev + 1);
@@ -73,15 +63,17 @@ const App: React.FC = () => {
       const prevSlideIndex = currentSlideIndex - 1;
       const prevSlide = data.slides[prevSlideIndex];
       setCurrentSlideIndex(prevSlideIndex);
-      setCurrentBuildIndex(prevSlide.builds ? prevSlide.builds.length - 1 : -1);
+      setCurrentBuildIndex((prevSlide.builds?.length || 0) - 1);
     }
   }, [data, currentSlideIndex, currentBuildIndex]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
       containerRef.current?.requestFullscreen().catch(() => {});
+      setIsFullscreen(true);
     } else {
       document.exitFullscreen();
+      setIsFullscreen(false);
     }
   }, []);
 
@@ -105,59 +97,45 @@ const App: React.FC = () => {
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-blue-500 font-sans">
       <div className="text-4xl font-black animate-pulse uppercase tracking-tighter italic mb-4">BIO_LIFE_SYSTEM_INIT...</div>
       <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
-        <motion.div 
-          className="h-full bg-blue-500"
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
+        <motion.div className="h-full bg-blue-500" initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 2, repeat: Infinity }} />
       </div>
     </div>
   );
 
   // Error State
   if (error) return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-red-500 p-8 text-center font-sans">
-      <div className="text-4xl font-black uppercase tracking-tighter mb-4">SYSTEM ERROR</div>
-      <p className="font-mono text-sm opacity-70 mb-2">No se pudo cargar la base de datos.</p>
-      <p className="font-mono text-xs opacity-50 bg-white/10 p-4 rounded max-w-lg mx-auto">{error}</p>
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#050810] text-red-500 font-sans p-8 text-center">
+      <div className="text-4xl font-black uppercase tracking-tighter mb-4">SYSTEM FAILURE</div>
+      <p className="font-mono text-sm opacity-70 mb-4">{error}</p>
+      <button onClick={() => window.location.reload()} className="px-4 py-2 bg-red-900/30 border border-red-500 text-red-400 rounded hover:bg-red-900/50">RETRY CONNECTION</button>
     </div>
   );
 
   const currentSlide = data.slides[currentSlideIndex];
 
   return (
-    <div 
-      ref={containerRef}
-      className="w-full h-screen bg-[#050810] text-white overflow-hidden relative font-['Inter'] focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset outline-none"
-      tabIndex={0}
-      aria-live="polite"
-      aria-label={`Slide ${currentSlideIndex + 1} of ${data.slides.length}: ${currentSlide.title}`}
-    >
-      <style>{`
-        .grid-bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-      `}</style>
-
-      {/* Background 3D */}
+    <div ref={containerRef} className="w-full h-screen bg-[#050810] text-white overflow-hidden relative outline-none select-none font-sans" tabIndex={0}>
+      
+      {/* Background 3D - Renderizado condicional para evitar conflictos */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <Canvas dpr={[1, 2]}>
           <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={40} />
-          <Scene3D slideIndex={currentSlideIndex} slideCount={data.slides.length} />
+          {data && <Scene3D slideIndex={currentSlideIndex} slideCount={data.slides.length} />}
         </Canvas>
       </div>
 
-      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,#050810_120%)] pointer-events-none" />
+      {/* Content Overlay */}
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,#050810_130%)] pointer-events-none" />
       
-      {/* Main Content */}
-      <main className="relative z-20 h-full w-full flex items-center justify-center px-4 md:px-12 py-10">
+      <main className="relative z-20 h-full w-full flex items-center justify-center px-6 md:px-20">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentSlideIndex}
             custom={direction}
-            initial={{ opacity: 0, scale: 1.05, filter: 'blur(20px)' }}
+            initial={{ opacity: 0, scale: 1.1, filter: 'blur(30px)' }}
             animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 0.95, filter: 'blur(20px)' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, scale: 0.9, filter: 'blur(30px)' }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="w-full h-full flex items-center justify-center"
           >
             <SlideRenderer slide={currentSlide} buildIndex={currentBuildIndex} />
@@ -165,38 +143,28 @@ const App: React.FC = () => {
         </AnimatePresence>
       </main>
 
-      {/* HUD - Progress */}
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5 z-50">
+      {/* HUD - Progress Bar */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-white/5 z-50">
         <motion.div 
-          className="h-full bg-blue-600 shadow-[0_0_20px_#3b82f6]" 
+          className="h-full bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.8)]" 
           animate={{ width: `${((currentSlideIndex + 1) / data.slides.length) * 100}%` }} 
-          transition={{ duration: 1, ease: "circOut" }} 
+          transition={{ duration: 0.8, ease: "circOut" }} 
         />
       </div>
 
-      <div className="absolute top-8 right-10 z-50 flex items-center gap-6 opacity-30 hover:opacity-100 transition-all duration-500">
-         <div className="flex flex-col items-end">
-           <span className="text-[10px] font-bold text-blue-500 tracking-[0.3em] uppercase mb-1">System State</span>
-           <span className="text-xl font-black tracking-tighter italic">0{currentSlideIndex + 1} / 0{data.slides.length}</span>
+      {/* Controls HUD */}
+      <div className="absolute bottom-8 right-8 z-50 flex items-center gap-4 opacity-40 hover:opacity-100 transition-all duration-500">
+         <div className="hidden md:flex flex-col items-end mr-4">
+           <span className="text-[9px] font-bold text-blue-500 tracking-[0.4em] uppercase">Phase</span>
+           <span className="text-2xl font-black tracking-tighter italic">0{currentSlideIndex + 1}</span>
          </div>
-         <button onClick={() => setShowOverview(true)} className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all focus-visible:ring-2 focus-visible:ring-blue-500" title="Overview (ESC)">
-            <Grid size={22} />
-         </button>
-         <button onClick={() => setShowNotes(prev => !prev)} className={`p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all focus-visible:ring-2 focus-visible:ring-blue-500 ${showNotes ? 'text-blue-400 border-blue-500/50' : ''}`} title="Speaker Notes (N)">
-            <StickyNote size={22} />
-         </button>
-         <button onClick={toggleFullscreen} className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all focus-visible:ring-2 focus-visible:ring-blue-500" title="Fullscreen (F)">
-            {isFullscreen ? <Minimize2 size={22} /> : <Maximize2 size={22} />}
-         </button>
+         <button onClick={navigateBackward} className="p-3 glass rounded-full hover:bg-white/10 transition-all focus:ring-2 focus:ring-blue-500 outline-none"><ChevronLeft size={20}/></button>
+         <button onClick={navigateForward} className="p-3 glass rounded-full hover:bg-white/10 transition-all focus:ring-2 focus:ring-blue-500 outline-none"><ChevronRight size={20}/></button>
+         <div className="h-8 w-px bg-white/10 mx-2" />
+         <button onClick={() => setShowOverview(true)} className="p-3 glass rounded-xl hover:bg-white/10 transition-all focus:ring-2 focus:ring-blue-500 outline-none"><Grid size={18} /></button>
+         <button onClick={() => setShowNotes(prev => !prev)} className={`p-3 glass rounded-xl hover:bg-white/10 transition-all focus:ring-2 focus:ring-blue-500 outline-none ${showNotes ? 'text-blue-400 border-blue-500/50' : ''}`}><StickyNote size={18} /></button>
+         <button onClick={toggleFullscreen} className="p-3 glass rounded-xl hover:bg-white/10 transition-all focus:ring-2 focus:ring-blue-500 outline-none">{isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>
       </div>
-
-      {/* Custom Cursor Placeholder */}
-      <motion.div 
-        className="fixed w-4 h-4 bg-blue-500 rounded-full pointer-events-none z-[999] mix-blend-difference"
-        style={{ top: 0, left: 0 }} 
-        animate={{ scale: [1, 1.5, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
 
       {/* Speaker Notes */}
       <AnimatePresence>
@@ -205,14 +173,14 @@ const App: React.FC = () => {
             initial={{ x: 300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 300, opacity: 0 }}
-            className="absolute top-32 right-10 z-50 w-80 p-8 bg-black/60 border border-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl"
+            className="absolute top-24 right-8 z-50 w-72 p-6 glass-strong rounded-3xl shadow-2xl backdrop-blur-xl border border-white/10"
           >
-            <div className="flex items-center gap-3 mb-4">
-               <StickyNote size={14} className="text-blue-500" />
-               <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-widest">Director Notes</h3>
+            <div className="flex items-center gap-2 mb-3 border-b border-white/10 pb-2">
+               <StickyNote size={12} className="text-blue-500" />
+               <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-widest">Speaker Notes</h3>
             </div>
-            <p className="text-sm text-gray-300 leading-relaxed font-light italic">
-              "{currentSlide.speakerNotes || "Awaiting transmission..."}"
+            <p className="text-xs text-gray-300 leading-relaxed italic font-light">
+              {currentSlide.speakerNotes || "Iniciando secuencia estratégica..."}
             </p>
           </motion.div>
         )}
@@ -223,32 +191,25 @@ const App: React.FC = () => {
         {showOverview && (
           <motion.div 
             initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(40px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(30px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            className="fixed inset-0 z-[100] bg-black/90 flex flex-col p-20 overflow-y-auto scrollbar-hide"
+            className="fixed inset-0 z-[100] bg-black/80 flex flex-col p-12 md:p-24 overflow-y-auto"
           >
-            <div className="flex justify-between items-center mb-20">
-              <h2 className="text-6xl font-black tracking-tighter uppercase italic">Registry<span className="text-blue-500">_</span></h2>
-              <button onClick={() => setShowOverview(false)} className="p-6 bg-white/5 hover:bg-white/10 rounded-full transition-all focus-visible:ring-2 focus-visible:ring-blue-500">
-                <X size={40} />
-              </button>
+            <div className="flex justify-between items-center mb-16">
+              <h2 className="text-5xl font-black tracking-tighter uppercase italic">BIO_SYSTEM<span className="text-blue-500">.</span>MAP</h2>
+              <button onClick={() => setShowOverview(false)} className="p-4 glass rounded-full hover:bg-white/10"><X size={30} /></button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {data.slides.map((s, idx) => (
                 <button 
                   key={s.id} 
-                  onClick={() => {
-                    setCurrentSlideIndex(idx);
-                    setCurrentBuildIndex(-1);
-                    setShowOverview(false);
-                  }}
-                  className={`relative group text-left transition-all duration-500 focus-visible:ring-4 focus-visible:ring-blue-500 rounded-[2rem] outline-none ${currentSlideIndex === idx ? 'scale-105 z-10' : 'opacity-40 hover:opacity-100 hover:scale-102'}`}
+                  onClick={() => { setCurrentSlideIndex(idx); setCurrentBuildIndex(-1); setShowOverview(false); }}
+                  className={`group relative text-left transition-all duration-300 rounded-3xl overflow-hidden focus:outline-none focus:ring-4 focus:ring-blue-500 ${currentSlideIndex === idx ? 'ring-2 ring-blue-500 scale-105' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
                 >
-                  <div className={`aspect-video p-8 flex flex-col justify-end bg-white/[0.03] border ${currentSlideIndex === idx ? 'border-blue-500' : 'border-white/10'} rounded-[2rem] overflow-hidden`}>
-                     <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2">Node 0{idx + 1}</span>
-                     <h3 className="text-lg font-black text-white line-clamp-1 uppercase tracking-tight">{s.title}</h3>
-                     <p className="text-xs text-gray-400 font-light truncate">{s.subtitle}</p>
-                     <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="aspect-video p-6 glass flex flex-col justify-end bg-gradient-to-br from-white/5 to-transparent">
+                     <span className="text-[9px] font-black text-blue-500 uppercase mb-1">0{idx + 1}</span>
+                     <h3 className="text-sm font-bold truncate uppercase text-white">{s.title}</h3>
+                     <p className="text-[10px] text-gray-400 truncate">{s.subtitle}</p>
                   </div>
                 </button>
               ))}
@@ -257,8 +218,8 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <footer className="absolute bottom-10 left-10 z-50 opacity-20 pointer-events-none">
-        <div className="text-4xl font-black tracking-tighter italic">BIO<span className="text-blue-500">.</span>LIFE</div>
+      <footer className="absolute bottom-8 left-8 z-50 opacity-10 pointer-events-none">
+        <div className="text-3xl font-black tracking-tighter italic">BIO<span className="text-blue-500">.</span>LIFE</div>
       </footer>
     </div>
   );

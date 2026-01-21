@@ -1,4 +1,3 @@
-
 import React, { useMemo, useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
@@ -99,11 +98,16 @@ export const Scene3D: React.FC<{ slideIndex: number; slideCount: number }> = ({ 
   return (
     <>
       <Stars radius={120} depth={40} count={isMobile ? 1000 : 2500} factor={4} saturation={0} fade speed={0.5} />
+      {/* @ts-ignore */}
       <points ref={points}>
+        {/* @ts-ignore */}
         <bufferGeometry>
+          {/* @ts-ignore */}
           <bufferAttribute attach="attributes-position" count={count} array={formations.sphere} itemSize={3} />
+          {/* @ts-ignore */}
           <bufferAttribute attach="attributes-color" count={count} array={formations.colors} itemSize={3} />
         </bufferGeometry>
+        {/* @ts-ignore */}
         <pointsMaterial size={isMobile ? 0.05 : 0.035} vertexColors transparent opacity={0.5} sizeAttenuation blending={THREE.AdditiveBlending} />
       </points>
     </>
